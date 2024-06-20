@@ -96,6 +96,7 @@ app.delete('/delete/:id', (req: Request, res: Response) => {
 
     // Return success response
     res.status(200).send({ message: 'Submission deleted successfully' });
+    console.log("Current Form Sucessfully Deleted!")
   } catch (error) {
     console.error('Error deleting submission:', error);
     res.status(500).send({ error: 'Error deleting submission' });
