@@ -1,16 +1,10 @@
 [
   {
-    "name": "John Doe",
-    "email": "john@example.com",
-    "phone": "1234567890",
-    "github_link": "https://github.com/johndoe",
-    "stopwatch_time": "00:10:00"
+    "Name": "Aditya Gupta",
+    "Email": "adityagupta20042003@gmail.com",
+    "Phone": "+91 6306842151",
+    "GitHubLink": "https://github.com/agnt17/SlidelyAI_Backend/",
+    "StopwatchTime": "00:00:04"
   },
-  {
-    "name": "John Doe",
-    "email": "john@example.com",
-    "phone": "1234567890",
-    "github_link": "https://github.com/johndoe",
-    "stopwatch_time": "00:10:00"
-  }
+  {}
 ]
