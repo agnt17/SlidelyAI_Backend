@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import fs from 'fs';
 import path from 'path';
-// import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 const PORT = process.env.PORT || 7000;
@@ -11,7 +11,7 @@ const DB_FILE = path.join(__dirname, 'db.json');
 app.use(bodyParser.json());
 
 interface Submissions {
-  // id: string;
+  id: string;
   Name: string;
   Email: string;
   Phone: string;
@@ -43,7 +43,7 @@ app.post('/submit', (req: Request, res: Response) => {
   //   return res.status(400).send({ error: 'All fields are required' });
   // }
 
-  const newSubmission: Submissions = { Name, Email, Phone, GitHubLink, StopwatchTime };
+  const newSubmission: Submissions = {id: uuidv4(),Name, Email, Phone, GitHubLink, StopwatchTime };
   let submissions: Submissions[] = [];
 
   try {
@@ -77,22 +77,28 @@ app.get('/read', (req: Request, res: Response) => {
   }
 });
 
-// app.delete('/delete/:id', (req: Request, res: Response) => {
-//   const { id } = req.params;
+app.delete('/delete/:id', (req: Request, res: Response) => {
+  const { id } = req.params;
 
-//   try {
-//     let submissions: Submissions[] = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+  try {
+    let submissions: Submissions[] = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
 
-//     const newSubmissions = submissions.filter(submission => submission.id !== id);
+    // Filter submissions to exclude the one with the matching ID
+    const newSubmissions = submissions.filter(submission => submission.id !== id);
 
-//     if (newSubmissions.length === submissions.length) {
-//       return res.status(404).send({ error: 'Submission not found' });
-//     }
+    // If no submission was removed, return 404 Not Found
+    if (newSubmissions.length === submissions.length) {
+      return res.status(404).send({ error: 'Submission not found' });
+    }
 
-//     fs.writeFileSync(DB_FILE, JSON.stringify(newSubmissions, null, 2));
-//     res.status(200).send({ message: 'Submission deleted successfully' });
-//   } catch (error) {
-//     console.error('Error reading or writing file:', error);
-//     res.status(500).send({ error: 'Error deleting submission' });
-//   }
-// });
+    // Write updated submissions array back to the file
+    fs.writeFileSync(DB_FILE, JSON.stringify(newSubmissions, null, 2));
+
+    // Return success response
+    res.status(200).send({ message: 'Submission deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting submission:', error);
+    res.status(500).send({ error: 'Error deleting submission' });
+  }
+});
+
